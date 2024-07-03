@@ -1,13 +1,14 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-
+import { useDispatch, useSelector } from 'react-redux';
 const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
-
+  const { loading, error } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -15,15 +16,19 @@ const Login = () => {
       [name]: value
     });
   };
-
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
     // You can add your login logic here, like calling an API endpoint
-
+  
     axios.post('/api/auth/login', formData)
-      .then((response) => {
-        console.log(response);
+    .then((response) => {
+      const token = response.data.token; // assuming the token is in the response data
+      localStorage.setItem('token', token);
+
+      console.log(response.data);
+      console.log(token);
         // Handle success response
       })
       .catch((error) => {
@@ -90,3 +95,31 @@ const Login = () => {
 };
 
 export default Login;
+
+
+
+/*
+const handleSubmit = (e) => {
+  e.preventDefault();
+  console.log(formData);
+  // You can add your login logic here, like calling an API endpoint
+
+  axios.post('/api/auth/login', formData)
+   .then((response) => {
+      console.log(response);
+      // Set token to localStorage
+      const token = response.data.token; // assuming the token is in the response data
+      const cookieToken = response.headers['set-cookie']; // assuming the token is set as a cookie
+      localStorage.setItem('token', token);
+      // You can also set the cookie token if you want
+      // localStorage.setItem('cookieToken', cookieToken);
+
+      // Handle success response
+    })
+   .catch((error) => {
+      console.error(error);
+      // Handle error response
+    });
+};
+
+*/
