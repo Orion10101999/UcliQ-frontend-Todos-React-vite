@@ -13,7 +13,7 @@ const DeleteTodo = () => {
           console.log(res.data.message);
           navigate('/showtodos');
         } catch (err) {
-          console.error(err);
+          console.error('Error',err);
         }
       };
       deleteTodo();

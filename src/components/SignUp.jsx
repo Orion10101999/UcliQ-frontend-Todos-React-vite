@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 const SignUp = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: ''
   });
-
+  const navigate = useNavigate()
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -22,8 +22,9 @@ const SignUp = () => {
     // Post formData to /api/auth/signup
     axios.post('/api/auth/signup', formData)
       .then((response) => {
-        console.log(response);
+        console.log(response.data);
         // Handle success response
+        navigate('/login')
       })
       .catch((error) => {
         console.error(error);

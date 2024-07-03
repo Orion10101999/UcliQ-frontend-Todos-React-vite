@@ -1,7 +1,8 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { signInFailure, signInStart, signInSuccess } from '../redux/user/userSlice';
 const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
@@ -9,6 +10,7 @@ const Login = () => {
   });
   const { loading, error } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -17,24 +19,26 @@ const Login = () => {
     });
   };
   
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(formData);
     // You can add your login logic here, like calling an API endpoint
-  
-    axios.post('/api/auth/login', formData)
-    .then((response) => {
-      const token = response.data.token; // assuming the token is in the response data
-      localStorage.setItem('token', token);
-
-      console.log(response.data);
-      console.log(token);
-        // Handle success response
-      })
-      .catch((error) => {
-        console.error(error);
-        // Handle error response
-      });
+    try {
+      dispatch(signInStart());
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
+    const data = await res.json();
+    console.log(data);
+    dispatch(signInSuccess(data));
+    navigate('/');
+  } catch (error) {
+    dispatch(signInFailure(error.message));
+  }
   };
 
   return (
