@@ -32,7 +32,7 @@ const ShowTodos = () => {
   <h1 className="text-2xl font-bold mb-4">Todo List</h1>
   <ul className="space-y-4">
     {todos.map(todo => (
-      <li key={todo._id} className="bg-white shadow-md rounded-md p-4">
+      <li key={todo._id} className="bg-gray-200 shadow-md rounded-md p-4">
         <h2 className="text-xl font-semibold">{todo.title}</h2>
         <p>{todo.description}</p>
         <p>Status: {todo.completed ? 'Completed' : 'Pending'}</p>
